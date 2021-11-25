@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Solasta Tools</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <meta property="og:title" content="Solasta Tools" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://solastatools.com" />
+    <meta property="og:image" content="http://solastatools.com/images/home_og_meta_image.jpg" />
+    <meta property="og:description" content="DM tools for the video game Solasta" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <%= render "vendor/jquery" %>
+    <%= render "vendor/amplitude" if Rails.env.production? %>
+    <%= render "vendor/google_analytics" if Rails.env.production? %>
+    <%= javascript_pack_tag 'st_singleton' %>
+  </head>
+
+  <body>
+    <%= render 'shared/header' %>
+    <%= yield %>
+    <%= render 'shared/footer' %>
+  </body>
+</html>

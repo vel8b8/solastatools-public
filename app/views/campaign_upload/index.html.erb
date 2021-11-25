@@ -1,0 +1,53 @@
+<div class="has-text-grey-lighter" style="background-color: black;">
+<section class="section">
+  <% if @prior_upload_error.present? %>
+  <div class="container">
+    <h1 class="title has-text-danger">Error Uploading</h1>
+    <div class="block">
+      <span>Your prior campaign upload failed. The error was: </span>
+      <span class="has-text-danger">
+        <%= @prior_upload_error %>
+      </span>
+      <div>Note that you can only upload Campaign json, not Location json.</div>
+    </div>
+  </div>
+  <% end %>
+  <div class="container">
+    <h1 class="title has-text-light">Campaign Checker</h1>
+    <h3 class="subtitle has-text-grey-lighter">Upload and Verify Your Campaign JSON</h3>
+    <%= form_with model: @campaign_upload, url: campaign_upload_create_path do |form| %>
+      <div class="block">
+        <%= form.file_field :campaign_json, accept: "text/json" %>
+      </div>
+      <div class="block">
+        <%= form.submit "Upload", class: "button is-primary" %>
+      </div>
+      <div>If Choose File does not open a file picker, be sure to update to the latest version of your browser, try another browser besides Chrome: Safari, Firefox, Edge, or disable ad and script blockers for this page.</div>
+    <% end %>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-light">How It Works</h1>
+    <p>
+    <ol>
+      <li class="mb-3">Click Choose File and select a single Campaign json. (Location json is not supported.)
+      You can find your campaigns in C:\User\%USERNAME%\AppData\LocalLow\Tactical Adventures\Solasta\UserContent\Campaigns
+      </li>
+      <li class="mb-3">Click Upload</li>
+      <li class="mb-3">View an analysis of all your locations, exits, and entrances</li>
+      <li class="mb-3">Easily spot any errors in maps throughout your campaign</li>
+      <li class="mb-3">Discover total XP, monster CR, encounter, and other insights</li>
+    </ol>
+    </p>
+  </div>
+  <div class="container">
+      <img src="/images/combined_screenshots.png" width="800" style="border-radius: 10px">
+  </div>
+</section>
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    window.st.api.trackEvent('PageView', { page_name: 'campaign_upload_index'});
+  });
+</script>

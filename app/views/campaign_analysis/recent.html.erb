@@ -1,0 +1,21 @@
+<section class="section">
+  <div class="container">
+    <div><h1 class="title">Locations, Exits, and Entrances</h1></div>
+    <table class="table is-striped">
+      <tbody>
+        <tr>
+          <th>UUID</th>
+          <th>Uploaded At</th>
+          <th>Author</th>
+        </tr>
+        <% @uploads.each do |upload| %>
+        <tr>
+          <td><%= link_to("#{upload.uuid}", campaign_analysis_show_path(upload.uuid)) %></td>
+          <td><%= upload.uploaded_at %></td>
+          <td><%= upload.author %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

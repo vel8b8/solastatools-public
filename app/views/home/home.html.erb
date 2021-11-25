@@ -1,0 +1,96 @@
+<style type="text/css">
+html {
+  scroll-behavior: smooth;
+}
+.down-arrow {
+  width: 1.5em;
+  height: 1.5em;
+  top: 50%;
+  margin-left: 3em;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  border-left: none;
+  border-top: none;
+  border-right: 3px #fff solid;
+  border-bottom: 3px #fff solid;
+}
+</style>
+
+<section class="hero is-fullheight is-primary" style="background-color: black;">
+  <div class="hero-body" style="background-image: url('/images/ranger_hero3.jpg'); background-repeat: no-repeat; background-position: center;">
+    <div class="container">
+      <h1 class="title">Solasta Tools</h1>
+      <h3 class="subtitle">for DMs</h3>
+      <div class="block">
+        <a href="<%= campaign_upload_index_path %>">
+          <button class="button is-link is-rounded" style="font-size: 1.3em;">Get Started</button>
+        </a>
+      </div>
+      <div class="block">
+        Visualize campaign connections
+      </div>
+      <div class="block">
+        Find critical bugs like missing entrances
+      </div>
+      <div class="block">
+        Discover campaign stats
+      </div>
+      <div class="block">
+        <a href="#learnmore"><div class="down-arrow"></div></a>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section is-large" id="learnmore">
+  <h1 class="title">Elevate Your Campaign <img width="32px" src="/images/d20.png" style="margin-bottom: -8px"/></h1>
+  <div class="columns">
+    <div class="column">
+      <h2>Visualize how each location connects to the others</h2>
+      <img src="/images/location_connections_graph.png" width="380" style="border-radius: 10px">
+    </div>
+    <div class="column">
+      <h2>Find mistakes before you publish</h2>
+      <img src="/images/locations_table.png" width="380" style="border-radius: 10px">
+    </div>
+    <div class="column">
+      <h2>Discover XP totals, enemy CR stats, and more</h2>
+      <img src="/images/xp_table.png" width="380" style="border-radius: 10px">
+    </div>
+  </div>
+  <div class="container">
+    <div class="columns">
+      <div class="column"></div>
+      <div class="column is-centered">
+        <a href="<%= campaign_upload_index_path %>">
+          <button class="button is-link is-rounded" style="font-size: 1.3em;">Get Started</button>
+        </a>
+      </div>
+      <div class="column"></div>
+    </div>
+  </div>
+</section>
+<section class="section is-large has-text-white" style="background-color: black;">
+  <div class="container">
+    <h1 class="title has-text-white">Support the Devs</h1>
+    <h2 class="subtitle has-text-white">
+      <p>at Tactical Adventures</p>
+      <p>
+        <a href="https://store.steampowered.com/app/1722280/Solasta_Crown_of_the_Magister__Primal_Calling/" class="has-text-white">
+          Buy the Primal Calling DLC
+        </a>
+      </p>
+    </h2>
+    <div class="columns">
+      <div class="column"></div>
+      <div class="column is-four-fifths">
+        <a href="https://store.steampowered.com/app/1722280/Solasta_Crown_of_the_Magister__Primal_Calling/"><img src="/images/solasta_primal_calling_promo.jpg" style="border-radius: 10px"></a>
+      </div>
+      <div class="column"></div>
+    </div>
+  </div>
+</section>
+<script type="text/javascript">
+  $(document).ready(function() {
+    window.st.api.trackEvent('PageView', { page_name: 'home'});
+  });
+</script>

@@ -1,0 +1,204 @@
+<% if @validation_results.blank? || @campaign_container.blank? %>
+<section class="section">
+  <div class="container">
+    <h1 class="title">❗ Unable to Load Campaign Analysis</h1>
+    <p>If you uploaded recently, there may have been an error processing your campaign.</p>
+    <p>Older uploads are purged after a week.</p>
+    <p>
+      <a href="<%= campaign_upload_index_path %>"> Return to the Campaign Checker </a>
+      to upload again.
+    </p>
+  </div>
+</section>
+<% else %>
+<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-one-quarter">
+        <div>
+          <% if @validation_results.errors.blank? %>
+            <span style="font-size:5em;">✅</span>
+            <span>Hooray! It all checked out.</span>
+          <% else %>
+            <span style="font-size:5em;">❗</span>
+            <span><%= @validation_results.errors.size %> errors</span>
+          <% end %>
+        </div>
+      </div>
+      <div class="column is-three-quarters">
+        <span style="font-size:0.8em">
+          <div><h1 class="title"><%= @campaign_container.title %></h1></div>
+          <div>
+            uuid: <%= @campaign_container.uuid %>
+          </div>
+          <div>
+            author: <%= @campaign_container.author %>
+          </div>
+          <div>
+            version: <%= @campaign_container.author_version %>
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div><h1 class="title">Location Connections</h1></div>
+    <%= render "connection_graph", location_link_graph: @location_link_graph %>
+    <div class="block" style="font-size: 0.75rem">
+      <ul>
+        <li>Mouse wheel or pinch zoom to zoom in and out</li>
+        <li>Left click or tap and hold to pan</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div><h1 class="title">Locations, Exits, and Entrances</h1></div>
+    <table class="table is-striped">
+      <tbody>
+        <tr>
+          <th>Origin Location</th>
+          <th>Destination Location</th>
+          <th>Entrance Index</th>
+          <th>Note</th>
+        </tr>
+        <% @validation_results.validation_links.each do |location_link| %>
+          <% unless location_link.dest_index_valid && location_link.dest_name_valid %>
+            <tr style="background-color:#Eccebf">
+          <% else %>
+            <tr>
+          <% end %>
+            <td><%= location_link.origin_name %></td>
+            <td><%= location_link.dest_name %></td>
+            <td><%= location_link.dest_entrance_index %></td>
+            <td>
+              <%= !location_link.dest_name_valid ? "invalid map" : (!location_link.dest_index_valid ? "invalid index" : "") %>
+              <%= location_link.campaign_end ? " campaign exit" : "" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div><h1 class="title">XP</h1></div>
+    <div>
+      <% total_available_xp = @xp_stats&.inject(0) { |sum, xpstat| sum + xpstat[:total_xp] } %>
+      <% individual_available_xp = (total_available_xp / 4.0).round(0) %>
+      <p>
+        Total XP available: <%= total_available_xp %>
+      </p>
+      <p>
+        Individual XP available: <%= individual_available_xp %>
+      </p>
+      <p>
+        Max character level from level 1: <%= XpLevel.xp_to_level(individual_available_xp) %>
+      </p>
+    </div>
+    <div class="content has-text-left" style="font-size: 0.75rem">
+      <ul>
+        <li>XP numbers below are totals for the entire party, not per party member.</li>
+        <li>The Individual XP column is what one party member would receive.</li>
+      </ul>
+    </div>
+    <table class="table is-striped">
+      <tbody>
+        <tr>
+          <th>Location</th>
+          <th>Individual XP</th>
+          <th>Total Party XP</th>
+          <th>Monster XP</th>
+          <th>Granted XP</th>
+        </tr>
+        <% @xp_stats&.each do |xpstat| %>
+          <tr>
+            <td><%= xpstat[:origin_name] %></td>
+            <td><%= (xpstat[:total_xp] / 4.0).round(0) %></td>
+            <td><%= xpstat[:total_xp] %></td>
+            <td><%= xpstat[:monster_xp] %></td>
+            <td><%= xpstat[:granted_xp] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div><h1 class="title">Monster Stats</h1></div>
+    <div><h3 class="title">CR</h3></div>
+    <table class="table is-striped">
+      <tbody>
+        <tr>
+          <th>Location</th>
+          <th>Median CR</th>
+          <th>Average CR</th>
+          <th>Max CR</th>
+          <th>Min CR</th>
+        </tr>
+        <% @campaign_monster_stats&.each do |monstats| %>
+          <tr>
+            <td><%= monstats[:origin_name] %></td>
+            <td class="has-text-primary-dark"><%= monstats[:median_monster_cr]&.round(1) %></td>
+            <td><%= monstats[:mean_monster_cr]&.round(1) %></td>
+            <td><%= monstats[:max_monster_cr] %></td>
+            <td><%= monstats[:min_monster_cr] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div><h3 class="title">Encounters</h3></div>
+    <div class="content has-text-left" style="font-size: 0.75rem">
+      <ul>
+        <li>Total is the number of monsters in a location</li>
+        <li>M/E is Monsters per Encounter</li>
+        <li>Groups is encounter groups (number of different indices)</li>
+      </ul>
+    </div>
+    <table class="table is-striped">
+      <tbody>
+        <tr>
+          <th>Location</th>
+          <th>Total</th>
+          <th>Groups</th>
+          <th>Median M/E</th>
+          <th>Average M/E</th>
+          <th>Max M/E</th>
+          <th>Min M/E</th>
+        </tr>
+        <% @campaign_monster_stats&.each do |monstats| %>
+          <tr>
+            <td><%= monstats[:origin_name] %></td>
+            <td><%= monstats[:total_monsters] %></td>
+            <td><%= monstats[:encounter_groups] %></td>
+            <td><%= monstats[:median_encounter_monsters]&.round(1) %></td>
+            <td><%= monstats[:mean_encounter_monsters]&.round(1) %></td>
+            <td><%= monstats[:max_encounter_monsters] %></td>
+            <td><%= monstats[:min_encounter_monsters] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<% if @validation_results.errors.present? %>
+  <section class="section">
+    <div class="container">
+      <div><h1 class="title">Error Log</h1></div>
+      <% @validation_results.errors&.each do |error_message| %>
+        <div font-size="0.5em"><%= error_message %></div>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+<% end %>
+<script type="text/javascript">
+  $(document).ready(function() {
+    window.st.api.trackEvent('PageView', { page_name: 'campaign_analysis_show'});
+  });
+</script>

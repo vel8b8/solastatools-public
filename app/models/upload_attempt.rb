@@ -1,0 +1,2 @@
+class UploadAttempt < ApplicationRecord
+end

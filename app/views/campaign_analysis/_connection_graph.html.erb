@@ -1,0 +1,19 @@
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style type="text/css">
+  .location_network {
+    height: 360px;
+    border: 1px solid #EEEEEE;
+  }
+</style>
+    <div id="location_graph" class="location_network"></div>
+    <script type="text/javascript">
+      var nodes = new vis.DataSet(<%= @location_link_graph.nodes_json %>);
+      var edges = new vis.DataSet(<%= @location_link_graph.edges_json %>);
+      var container = document.getElementById("location_graph");
+      var data = {
+        nodes: nodes,
+        edges: edges,
+      };
+      var options = {};
+      var network = new vis.Network(container, data, options);
+    </script>

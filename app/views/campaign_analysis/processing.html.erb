@@ -1,0 +1,36 @@
+<section class="section">
+  <div class="columns">
+    <div class="column">
+    <div class="column is-one-third status-message">
+      <h1 class="title">Processing your campaign...</h1>
+      <p>This page will refresh automatically. Processing may take several seconds. Please wait.</p>
+      <p>uuid: <%= @upload_uuid %></p>
+      <progress class="progress is-small is-primary" max="100">15%</progress>
+    </div>
+    <div class="column">
+  </div>
+</section>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    window.st.api.trackEvent('PageView', { page_name: 'campaign_analysis_processing'});
+
+    var statusUrl = '<%= campaign_analysis_status_path %>';
+    var retryTracker = { retries: 0 };
+    retryTracker['intervalHandle'] = window.setInterval(function() {
+      retryTracker['retries'] += 1;
+      if(retryTracker['retries'] > 30) {
+        window.clearInterval(retryTracker['intervalHandle']);
+        $('.status-message').html("Unable to process your campaign due to an unspecified error. Return to the Campaign Checker and try again.");
+      }
+      else {
+        $.getJSON(statusUrl, function(data) {
+          if(data['ready']) {
+            window.location.href = '<%= campaign_analysis_show_path %>'
+          }
+        });
+      }
+    }, 2000);
+    
+  });
+</script>

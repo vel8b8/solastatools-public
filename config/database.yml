@@ -1,0 +1,40 @@
+# SQLite. Versions 3.8.0 and up are supported.
+#   gem install sqlite3
+#
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem 'sqlite3'
+#
+# default: &default
+#   adapter: sqlite3
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#   timeout: 5000
+
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  username: root
+  password:
+  host: localhost
+  port: 3306
+  connect_timeout: 5
+
+development:
+  <<: *default
+  database: solastatools_development
+  url: "mysql2://root@127.0.0.1:3306/solastatools_development"
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: solastatools_test
+
+production:
+  <<: *default
+  url: <%= ENV["MYSQL_URL"] %>
+  database: solastatools_production
+  sslkey:  <%= "#{Rails.root.join('tmp')}/client-key.pem" %>
+  sslcert: <%= "#{Rails.root.join('tmp')}/client-cert.pem" %>
+  sslca:   <%= "#{Rails.root.join('tmp')}/server-ca.pem" %>

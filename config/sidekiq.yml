@@ -1,0 +1,5 @@
+# config/sidekiq.yml
+:schedule:
+  upload_cleanup:
+    every: 24 hours
+    class: UploadCleanupWorker
