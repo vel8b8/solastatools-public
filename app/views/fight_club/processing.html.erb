@@ -1,0 +1,45 @@
+<section class="section">
+  <div class="container">
+    <h2 class="title is-2">Your monsters are fighting...</h2>
+    <div class="block">
+      We're simulating an epic battle between PCs and monsters to estimate difficulty levels.
+    </div>
+    <div class="block">
+      <b>Processing may take several minutes.</b> This page will refresh automatically. Please wait.
+    </div>
+    <progress class="progress is-small is-primary" max="100">15%</progress>
+    <div class="block">
+      <span style="font-size:0.8em">uuid: <%= @upload_uuid %></span>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+      <div><h2 class="title is-2">While You Wait, Meet ED🐴</h2></div>
+      <div class="block">ED🐴 = Combat Estimated Difficulty</div>
+      <%= render 'estimated_difficulty_explainer' %>
+  </div>
+</section>
+<script type="text/javascript">
+  $(document).ready(function() {
+    window.st.api.trackEvent('PageView', { page_name: 'fight_club_processing'});
+
+    var statusUrl = '<%= fight_club_status_path %>';
+    var retryTracker = { retries: 0 };
+    retryTracker['intervalHandle'] = window.setInterval(function() {
+      retryTracker['retries'] += 1;
+      if(retryTracker['retries'] > 180) {
+        window.clearInterval(retryTracker['intervalHandle']);
+        $('.status-message').html("Unable to analyze your campaign encounters and monsters due to an unspecified error. Return to the Campaign Checker and try again.");
+      }
+      else {
+        $.getJSON(statusUrl, function(data) {
+          if(data['ready']) {
+            window.location.href = '<%= fight_club_show_path %>'
+          }
+        });
+      }
+    }, 2000);
+    
+  });
+</script>

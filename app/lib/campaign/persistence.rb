@@ -1,5 +1,5 @@
 class Campaign::Persistence
-  REDIS_KEY_EXPIRATION_SECONDS = 60 * 60 * 24 * 7
+  REDIS_KEY_EXPIRATION_SECONDS = 60 * 60 * 24 * 3
 
   def save_container(uuid, campaign_container)
     save(key_for(:container, uuid), campaign_container)
@@ -8,6 +8,14 @@ class Campaign::Persistence
   # return: Campaign::Container
   def load_container(uuid)
     load(key_for(:container, uuid))
+  end
+  
+  def save_processing_status(uuid, status)
+    save(key_for(:processing_status, uuid), status)
+  end
+
+  def load_processing_status(uuid)
+    load(key_for(:processing_status, uuid))
   end
 
   def save_validation(uuid, validation_results)
@@ -21,6 +29,18 @@ class Campaign::Persistence
 
   def key_for(context, uuid)
     "#{uuid}:#{context}"
+  end
+
+  def save_combat_stats(uuid, combat_stats)
+    save(key_for(:combat_stats, uuid), combat_stats)
+  end
+
+  def load_combat_stats(uuid)
+    load(key_for(:combat_stats, uuid))
+  end
+
+  def delete_combat_stats(uuid)
+    StRedis.client.del(key_for(:combat_stats, uuid))
   end
 
   private

@@ -1,0 +1,207 @@
+<% if @campaign_upload.blank? || @combat_stats.blank? %>
+<section class="section">
+  <div class="container">
+    <h1 class="title">❗ Unable to Load Combat Analysis</h1>
+    <p>If you uploaded recently, there may have been an error simulating combat your campaign.</p>
+    <p>Older uploads are purged after a week.</p>
+    <div>
+      <a href="<%= campaign_analysis_show_path(@upload_uuid)%>">⬅ Back to the Campaign Analysis</a>
+    </div>
+  </div>
+</section>
+<% else %>
+<section class="section" style="margin-bottom: -5em">
+  <div class="container">
+    <div>
+      <a href="<%= campaign_analysis_show_path(@upload_uuid)%>">⬅ Back to the Campaign Analysis</a>
+    </div>
+  </div>
+</section>
+<section class="section" style="margin-bottom: -5em">  
+  <div class="container">
+    <div><h1 class="title is-1">Combat Estimated Difficulty (ED🐴)</h1></div>
+    <span style="font-size:0.65em">
+      <div>
+        uuid: <%= @campaign_upload.uuid %>
+      </div>
+      <div>
+        author: <%= @campaign_upload.author %>
+      </div>
+      <div>
+        campaign filename: <%= @campaign_upload.filename %>
+      </div>
+    </span>
+  </div>
+  <div class="container">
+    <div><h3 class="title is-3">Jump To Section...</h3></div>
+    <table class="table is-hoverable" style="font-size:1.2em">
+      <tbody>
+        <tr><td><a href="#custom-monsters-section">Custom Monsters</a></td></tr>
+        <tr><td><a href="#encounters-grouped-monsters-section">Encounters : Grouped Monsters</a></td></tr>
+        <tr><td><a href="#encounters-lonely-monsters-section">Encounters : Lonely Monsters</a></td></tr>
+        <tr><td><a href="#xp-adjustments-section">XP Adjustments Per Map</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div><h3 class="title is-3"><a name="explainer">Explainer</a></h3></div>
+    <%= render 'estimated_difficulty_explainer' %>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <h1 class="title is-1"><a name="custom-monsters-section">Custom Monsters</a></h1>
+    <div class="block">
+      💡 Click/tap the rows in the tables below to see the ED🐴 details by player level for the encounter. Refer to the <a href="#explainer">Explainer above</a> for more on ED🐴.
+    </div>
+    <table class="table is-hoverable">
+      <tbody>
+        <tr>
+          <th>Name</th>
+          <th>ED🐴</th>
+          <th>Party Depletion %</th>
+          <th>XP Adjustment</th>
+          <th>Attacks Summary</th>
+        </tr>
+        <% @combat_stats[:custom_monster_stats]&.each do |stats| %>
+          <% detailed_stats_url = fight_club_show_details_path(uuid: @upload_uuid, fight_club_id: stats[:stats][:fight_club_id] || 'error') %>
+          <tr class="clickable-row" data-href="<%= detailed_stats_url %>">
+            <% the_monster = stats[:stats][:monster_party][0] %>
+            <td><%= the_monster.name %></td>
+            <td class="has-text-success-dark">
+              <a href="<%= detailed_stats_url %>"> 
+                <%= stats[:stats][:player_level] %>
+              </a>
+            </td>
+            <td><%= (stats[:stats][:party_depletion].round(2)*100).to_i %>%</td>
+            <td><%= stats[:stats][:xp_adjustment] %></td>
+            <td style="font-size:0.6em"><%= pretty_attacks(the_monster.attacks) %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <h1 class="title is-1"><a name="encounters-grouped-monsters-section">Encounters: Grouped Monsters</a></h1>
+    <div class="block">
+      💡 Click/tap the rows in the tables below to see the ED🐴 details by player level for the encounter.
+    </div>
+    <h2 class="title is-4">Grouped Monsters</h2>
+    <table class="table is-hoverable">
+      <tbody>
+        <tr>
+          <th>Location Name</th>
+          <th>Encounter Index</th>
+          <th>Monster Quantity</th>
+          <th>ED🐴</th>
+          <th>Party Depletion %</th>
+          <th>XP Adjustment</th>
+          <th>Monsters</th>
+        </tr>
+        <% @combat_stats[:encounter_stats]&.each do |stats| %>
+          <% detailed_stats_url = fight_club_show_details_path(uuid: @upload_uuid, fight_club_id: stats[:stats][:fight_club_id] || 'error') %>
+          <% if stats[:stats][:player_status] == :tpk || stats[:stats][:player_level] >= 12 %>
+            <tr class="clickable-row" style="background-color:hsl(48, 100%, 96%)" data-href="<%= detailed_stats_url %>">
+          <% else %>
+            <tr class="clickable-row" data-href="<%= detailed_stats_url %>">
+          <% end %>
+            
+            <td><%= stats[:location_name] %></td>
+            <td class="has-text-grey-light"><%= stats[:encounter_index] %></td>
+            <td class="has-text-grey-light"><%= stats[:stats][:monster_party].size %></td>
+            <td class="has-text-success-dark">
+              <a href="<%= detailed_stats_url %>"> 
+                <%= stats[:stats][:player_status] == :tpk ? '>' : ''%><%= stats[:stats][:player_level] %>
+              </a>
+            </td>
+            <td><%= (stats[:stats][:party_depletion].round(2)*100).to_i %>%</td>
+            <td><%= stats[:stats][:xp_adjustment] %></td>
+            <td style="font-size:0.5em"><%= stats[:stats][:monster_party].map {|m| m.name }.join(', ').truncate(200) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <h1 class="title is-1"><a name="encounters-lonely-monsters-section">Encounters: Lonely Monsters (Ungrouped)</a></h1>
+    <div class="block">
+      💡 Click/tap the rows in the tables below to see the ED🐴 details by player level for the encounter.
+    </div>
+    <table class="table is-striped">
+      <tbody>
+        <tr>
+          <th>Location Name</th>
+          <th>ED🐴</th>
+          <th>Party Depletion %</th>
+          <th>Monsters</th>
+        </tr>
+        <% if @combat_stats[:ungrouped_stats].blank? %>
+          <td>No lonely monsters found. They all have friends.</td>
+        <% else %>
+          <% @combat_stats[:ungrouped_stats]&.each do |stats| %>
+            <% detailed_stats_url = fight_club_show_details_path(uuid: @upload_uuid, fight_club_id: stats[:stats][:fight_club_id] || 'error') %>
+            <tr class="clickable-row" data-href="<%= detailed_stats_url %>">
+              <td><%= stats[:location_name] %></td>
+              <td><%= stats[:stats][:player_status] == :tpk ? '>' : ''%><%= stats[:stats][:player_level] %></td>
+              <td><%= (stats[:stats][:party_depletion].round(2)*100).to_i %>%</td>
+              <td style="font-size:0.5em"><%= stats[:stats][:monster_party].map {|m| m.name }.join(', ').truncate(300) %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <h1 class="title is-1"><a name="xp-adjustments-section">XP Adjustments Per Map</a></h1>
+    <div class="block">
+      💡 Location total <b>XP Adjustment</b> vs Solasta CR XP. All XP adjustment amounts are individual PC, not party. <b>Current XP Grants</b> list XP amounts given via the Grant XP Gadget. Refer to the <a href="#explainer">Explainer above</a>.
+    </div>
+    <div class="block">
+      <h5 class="title is-5">Totals for the entire campaign:</h5>
+      <div>Individual PC XP adjustment: <%= @xp_adjustment_grand_totals[:campaign_xp_adjustment] %></div>
+      <div>Granted XP: <%= @xp_adjustment_grand_totals[:campaign_granted_xp] %></div>
+      <div>Additional XP needed: <%= @xp_adjustment_grand_totals[:additional_xp_needed] %></div>
+    </div>
+    <table class="table is-striped">
+      <tbody>
+        <tr>
+          <th>Location Name</th>
+          <th>Average ED🐴</th>
+          <th>XP Adjustment</th>
+          <th>Current XP Grants</th>
+          <th>Additional XP Needed</th>
+        </tr>
+        <% @xp_adjustment_per_map&.each_pair do |location_name, xp_data| %>
+          <tr>
+            <td><%= location_name %></td>
+            <td><%= xp_data[:ed_simple_average] %></td>
+            <td><%= xp_data[:xp_adjustment] %></td>
+            <td><%= xp_data[:granted_xp] %></td>
+            <td><%= xp_data[:xp_adjustment] - xp_data[:granted_xp] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<script type="text/javascript">
+  $(document).ready(function($) {
+    $(".clickable-row").click(function() {
+      var url = $(this).data("href");
+      if(url !== undefined && url !== null && url != 'nil' && url.length > 0) {
+        window.document.location = url;
+      }
+    });
+  });
+</script>
+<% end %>

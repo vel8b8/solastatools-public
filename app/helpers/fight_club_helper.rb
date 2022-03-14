@@ -1,0 +1,2 @@
+module FightClubHelper
+end

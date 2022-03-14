@@ -1,67 +1,81 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>The page you were looking for doesn't exist (404)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <style>
-  .rails-default-error-page {
-    background-color: #EFEFEF;
-    color: #2E2F30;
-    text-align: center;
-    font-family: arial, sans-serif;
-    margin: 0;
-  }
+  <head>
+    <title>Solasta Tools - Page Not Found (404)</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  .rails-default-error-page div.dialog {
-    width: 95%;
-    max-width: 33em;
-    margin: 4em auto 0;
-  }
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"></script>
+    
+    <script src="/packs/js/st_singleton-a3e28d693b7f088316b6.js"></script>
+  </head>
 
-  .rails-default-error-page div.dialog > div {
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #BBB;
-    border-top: #B00100 solid 4px;
-    border-top-left-radius: 9px;
-    border-top-right-radius: 9px;
-    background-color: white;
-    padding: 7px 12% 0;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
+  <body>
+    <nav class="navbar has-background-white-bis" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      Solasta <img src="/images/d20.png"/> Tools
+    </a>
 
-  .rails-default-error-page h1 {
-    font-size: 100%;
-    color: #730E15;
-    line-height: 1.5em;
-  }
-
-  .rails-default-error-page div.dialog > p {
-    margin: 0 0 1em;
-    padding: 1em;
-    background-color: #F7F7F7;
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #999;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-top-color: #DADADA;
-    color: #666;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
-  </style>
-</head>
-
-<body class="rails-default-error-page">
-  <!-- This file lives in public/404.html -->
-  <div class="dialog">
-    <div>
-      <h1>The page you were looking for doesn't exist.</h1>
-      <p>You may have mistyped the address or the page may have moved.</p>
-    </div>
-    <p>If you are the application owner check the logs for more information.</p>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarPrimary" 
+      onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
   </div>
-</body>
+
+  <div id="navbarPrimary" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="/campaign/upload">
+        Campaign Checker
+      </a>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More
+        </a>
+
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="/resources">
+            Resources
+          </a>
+          <a class="navbar-item" href="/about">
+            About
+          </a>
+          <a class="navbar-item" href="/contact">
+            Contact
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="navbar-end">
+  </div>
+</nav>
+    <section class="section">
+  <div class="container">
+    <h1 class="title">❗ Page Not Found (404)</h1>
+    <p>
+      <a href="/"> Return home. </a>
+    </p>
+  </div>
+</section>
+<script type="text/javascript">
+  $(document).ready(function() {
+    window.st.api.trackEvent('PageView', { page_name: 'error'});
+  });
+</script>
+    <footer class="footer has-background-white-bis">
+  <span class="content has-text-left" style="font-size: 0.75rem">
+    Solasta Tools is not affiliated with Tactical Adventures.
+  </span>
+  <div class="content has-text-right" style="font-size: 0.75rem">
+    Copyright © 2021 Eighth Avenue Systems, LLC
+  </div>
+</footer>
+  </body>
 </html>

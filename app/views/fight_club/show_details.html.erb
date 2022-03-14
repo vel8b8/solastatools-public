@@ -1,0 +1,76 @@
+<% if @campaign_upload.blank? || @combat_stats.blank? || @club_display_details.blank? %>
+<section class="section">
+  <div class="container">
+    <h1 class="title">❗ Unable to Load Combat Analysis</h1>
+    <p>If you uploaded recently, there may have been an error simulating combat your campaign.</p>
+    <p>Older uploads are purged after a week.</p>
+    <div>
+      <a href="<%= campaign_analysis_show_path(@upload_uuid)%>">⬅ Back to the Campaign Analysis</a>
+    </div>
+  </div>
+</section>
+<% else %>
+<section class="section" style="margin-bottom: -5em">
+  <div class="container">
+    <div>
+      <a href="<%= fight_club_show_path(@upload_uuid) %>">⬅ Back to the Combat Analysis</a>
+    </div>
+    <span style="font-size:0.65em">
+      <div>
+        uuid: <%= @campaign_upload.uuid %>
+      </div>
+      <div>
+        author: <%= @campaign_upload.author %>
+      </div>
+      <div>
+        campaign filename: <%= @campaign_upload.filename %>
+      </div>
+    </span>
+  </div>
+</section>
+<section class="section">  
+  <div class="container">
+    <div><h1 class="title is-1">ED🐴 Details</h1></div>
+    <div class="block">
+      <div>Location: <%= @club_display_details[:location_name] %></div>
+      <div>Encounter Index: <%= @club_display_details[:encounter_index] %></div>
+      <div>Monsters: <%= @club_display_details[:monster_names] %></div>
+      <div>XP Adjustment: <%= @club_display_details[:xp_adjustment] %></div>
+      <% if @club_display_details[:attacks_summary].present? %>
+        <div>Attacks Summary: <%= @club_display_details[:attacks_summary] %></div>
+      <% end %>
+      
+    </div>
+    <div class="block" style="font-size:0.8em">
+      <div>Player Level : character level of each party member</div>
+      <div>Party Depletion % : party resources used</div>
+      <div>Win % : how often player wins the combat encounter at that player level</div>
+      <div>PC Deaths : average number of player characters who died during the combat encounter</div>
+      <div>TPK : Total Party Kill, Game Over</div>
+    </div>
+    <div class="block">
+      <h3 class="subtitle is-3">ED🐴 = <%= @club_display_details[:estimated_difficulty] %> </h3>
+    </div>
+    <table class="table is-hoverable">
+      <tbody>
+        <tr>
+          <th>Player Level</th>
+          <th>Party Depletion %</th>
+          <th>Win %</th>
+          <th>PC Deaths (Avg)</th>
+          <th>TPK?</th>
+        </tr>
+        <% @club_display_details[:combat_instance_table].each do |row_data| %>
+        <tr>
+          <td><%= row_data[:player_level] %></td>
+          <td><%= row_data[:party_depletion] %>%</td>
+          <td><%= row_data[:win_rate] %>%</td>
+          <td><%= row_data[:average_character_deaths] %></td>
+          <td><%= row_data[:tpk] %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<% end %>

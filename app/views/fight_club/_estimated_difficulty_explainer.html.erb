@@ -1,0 +1,35 @@
+<div class="block">
+  ED🐴 is an improved, more accurate CR (Challenge Rating) for D&D 5e combat in Solasta.
+</div>
+<div class="block">
+  <b>Estimated Difficulty (ED🐴)</b> indicates the level of the player party to achieve victory in combat 
+  against the given monster(s) with minimal depletion. 
+  The ED🐴 can represent an entire combat encounter with many monsters or a single monster.
+</div>
+<div class="block">
+  <b>Party Depletion</b> is how much of the party resources have been used and signals how soon the party will need a short or long rest. 
+  Player character (PC) HP, deaths, and other factors influence depletion and ED🐴.
+</div>
+<div class="block">
+  <b>XP Adjustment</b> is the delta of ED🐴 XP vs Solasta monster CR. When XP Adjustment is positive, 
+  you should grant additional XP to match the difficulty of the encounter. 
+  For example, if you enhance a CR 0.5 Goblin to be a Super Goblin ED🐴 5, the XP Adjustment calculation is (1800/4 - 100/4) = +425 XP. 
+  Note that the XP indicates individual PC (player character) XP, not party XP. XP Adjustments are already divided by 4. 
+  Solasta's Grant XP Gadget awards the individual XP amount per party member.
+</div>
+<div class="block">
+  The Solasta combat simulation's party composition is the canonical fighter, cleric, rogue, wizard.
+  The linear regression model calculates statistics from
+  hundreds or thousands of combat encounter simulations before recommending an ED🐴.
+</div>
+<div class="block" style="font-size:0.8em">
+  Examples:
+  <ul>
+    <li>party level 1 vs 2x Ghouls ED🐴1 -> 10% depleted, can win many of these before resting</li>
+    <li>party level 1 vs 5x Goblin ED🐴1 -> 20% depleted, can win multiple of these before resting</li>
+    <li>party level 2 vs 1x Darkweaver ED🐴4 -> 50% depleted, may TPK (total party kill), will need to revive downed party members, long rest</li>
+    <li>party level 5 vs 1x Green Dragon ED🐴12 -> 100% depleted, will TPK, Game Over, zero chance of winning</li>
+    <li>party level 12 vs 1x Green Dragon ED🐴12 -> 15% depleted, easily winnable (even if it shouldn't be)</li>
+    <li>party level 12 vs 2x Green Dragon ED🐴12 -> 55% depleted, may TPK, will need to revive downed, long rest</li>
+  </ul>
+</div>

@@ -1,5 +1,5 @@
 class Campaign::Container
-  attr_accessor :uuid, :title, :author, :author_version, :locations
+  attr_accessor :uuid, :title, :author, :author_version, :locations, :custom_monsters
 
   def initialize
     @locations = []

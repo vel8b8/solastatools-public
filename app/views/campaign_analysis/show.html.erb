@@ -38,8 +38,19 @@
             version: <%= @campaign_container.author_version %>
           </div>
         </span>
+        <span>
+          <div><b>Did you know?</b></div>
+          <div>You can get an Estimated Difficulty (ED🐴) for your encounters with the <a href="<%= fight_club_start_path(@campaign_container.uuid) %>">Combat Simulator</a>.
+        </span>
       </div>
     </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div><h1 class="title">WARNING: solastatools.com is shutting down March 30th, 2022</h1></div>
+    <div>You can find the <a href="https://github.com/vel8b8/solastatools-public">source code on github</a>.
+    Contact vel#5446 on the <a href="https://discord.com/channels/583281506739290125/583281506739290133">Solasta discord</a> if you'd like to see it stay alive.</div>
   </div>
 </section>
 <section class="section">
@@ -130,28 +141,17 @@
 </section>
 <section class="section">
   <div class="container">
-    <div><h1 class="title">Monster Stats</h1></div>
-    <div><h3 class="title">CR</h3></div>
-    <table class="table is-striped">
-      <tbody>
-        <tr>
-          <th>Location</th>
-          <th>Median CR</th>
-          <th>Average CR</th>
-          <th>Max CR</th>
-          <th>Min CR</th>
-        </tr>
-        <% @campaign_monster_stats&.each do |monstats| %>
-          <tr>
-            <td><%= monstats[:origin_name] %></td>
-            <td class="has-text-primary-dark"><%= monstats[:median_monster_cr]&.round(1) %></td>
-            <td><%= monstats[:mean_monster_cr]&.round(1) %></td>
-            <td><%= monstats[:max_monster_cr] %></td>
-            <td><%= monstats[:min_monster_cr] %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <div><h1 class="title">Combat Difficulty, Custom Monster ED🐴</h1></div>
+    <div>You can get an Estimated Difficulty (ED🐴) for your encounters with the <a href="<%= fight_club_start_path(@campaign_container.uuid) %>">Combat Simulator</a>.
+    <div class="block">
+      <a href="<%= fight_club_start_path(@campaign_container.uuid) %>">
+        <button class="button is-link is-rounded" style="font-size: 1.3em;">Simulate Combat</button>
+      </a>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
     <div><h3 class="title">Encounters</h3></div>
     <div class="content has-text-left" style="font-size: 0.75rem">
       <ul>

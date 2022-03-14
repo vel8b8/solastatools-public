@@ -1,11 +1,22 @@
 <section class="section">
   <div class="columns">
     <div class="column">
-    <div class="column is-one-third status-message">
-      <h1 class="title">Processing your campaign...</h1>
-      <p>This page will refresh automatically. Processing may take several seconds. Please wait.</p>
-      <p>uuid: <%= @upload_uuid %></p>
-      <progress class="progress is-small is-primary" max="100">15%</progress>
+    <div class="column is-one-third">
+      <div class="processing-message">
+        <h1 class="title">Processing your campaign...</h1>
+        <div class="block">This page will refresh automatically. Processing may take around a minute for large campaigns. Please wait.</div>
+        <div class="block">uuid: <%= @upload_uuid %></div>
+        <progress class="progress is-small is-primary" max="100">15%</progress>
+      </div>
+      <div class="failed-processing is-hidden">
+        <div class="block">Failed to process your campaign due to an error.</div>
+        <div class="block error-message"></div>
+        <div class="block">
+          Be sure you are uploading a <b>Campaign</b> and <b>not a single Location</b> 
+          and that you have <b>set your Author tag in the campaign</b>.
+        </div>
+        <div><a href="<%= campaign_upload_index_path %>">Return to the Campaign Checker</a> and try again.</div>
+      </div>
     </div>
     <div class="column">
   </div>
@@ -16,17 +27,30 @@
     window.st.api.trackEvent('PageView', { page_name: 'campaign_analysis_processing'});
 
     var statusUrl = '<%= campaign_analysis_status_path %>';
-    var retryTracker = { retries: 0 };
+    var retryTracker = { retries: 0, processing_error: false };
+    var showErrorDiv = function() {
+      $('.failed-processing').removeClass('is-hidden');
+      $('.processing-message').addClass('is-hidden');
+    };
     retryTracker['intervalHandle'] = window.setInterval(function() {
       retryTracker['retries'] += 1;
-      if(retryTracker['retries'] > 30) {
+      if(retryTracker['processing_error'] || retryTracker['retries'] > 60) {
         window.clearInterval(retryTracker['intervalHandle']);
-        $('.status-message').html("Unable to process your campaign due to an unspecified error. Return to the Campaign Checker and try again.");
+        if(retryTracker['retries'] > 60) {
+          $('.error-message').html('Unknown error or exceeded timeout.');
+          showErrorDiv();
+        }
       }
       else {
         $.getJSON(statusUrl, function(data) {
           if(data['ready']) {
             window.location.href = '<%= campaign_analysis_show_path %>'
+          }
+          else if(data['status'] == 'error') {
+            retryTracker['processing_error'] = true;
+            showErrorDiv();
+            console.log('Error: ' + data['error_cause']);
+            $('.error-message').html(data['error_cause']);
           }
         });
       }

@@ -19,8 +19,9 @@ class CampaignParser
     campaign_hash['userMonsters'].each do |monster|
       internal_name = monster['internalName']
       next if internal_name.blank?
-      custom_monsters[internal_name] = { reference_definition: monster['referenceDefinition'] }
+      custom_monsters[internal_name] = { reference_definition: monster['referenceDefinition'], monster_details: monster }
     end
+    container.custom_monsters = custom_monsters
     campaign_hash['userLocations'].each_with_index do |user_location, index|
       location_name = user_location['title']
       if location_name.blank?
@@ -87,6 +88,8 @@ class CampaignParser
         monster.group_index = param['intValue']
       end
     end
+    # In the campaign json GroupIndex is automatically 1 if EncounterGroup=false
+    monster.group_index = nil unless monster.encounter_group
     refdef = custom_monsters.has_key?(monster.creature) ? custom_monsters[monster.creature][:reference_definition] : nil
     monster.reference_definition = refdef || monster.creature
     monster.cr = MonsterCr.find_cr(monster.reference_definition)
